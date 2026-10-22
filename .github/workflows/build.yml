@@ -30,6 +30,12 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      - name: Probe plugin repository
+        run: |
+          M=https://nexus.gtnewhorizons.com/repository/public/com/gtnewhorizons/retrofuturagradle/com.gtnewhorizons.retrofuturagradle.gradle.plugin/maven-metadata.xml
+          code=$(curl -s -o meta.xml -w '%{http_code}' "$M")
+          echo "::notice title=RFG metadata HTTP $code::$(grep -o '<version>[^<]*' meta.xml | sed 's/<version>//' | tr '\n' ' ')"
+
       - name: Build
         run: |
           chmod +x gradlew
